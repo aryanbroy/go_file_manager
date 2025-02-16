@@ -4,6 +4,8 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"log/slog"
+
 	"github.com/aryanbroy/file_manager/utils"
 	"github.com/spf13/cobra"
 )
@@ -26,7 +28,9 @@ to quickly create a Cobra application.`,
 
 		// fmt.Println(dir)
 		// utils.ListFiles(dir)
-		utils.ListFiles("/home/aryan/go/student-api", "")
+		dir := "/home/aryan/go/student-api"
+		slog.Info("Printing the list of files in the requested directory", slog.String("dirname", dir))
+		utils.ListFiles(dir, "")
 
 	},
 }
