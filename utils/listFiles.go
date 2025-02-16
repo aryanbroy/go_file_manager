@@ -5,9 +5,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 )
 
-func ListFiles(dir string) {
+func ListFiles(dir string, prefix string) {
 	f, err := os.Open(dir)
 	if err != nil {
 		log.Fatalln("Error opening directory: ", err.Error())
@@ -18,18 +19,27 @@ func ListFiles(dir string) {
 		log.Fatalln("Error reading files from dir: ", err.Error())
 	}
 
-	for _, v := range files {
-		fmt.Printf("%v%v", v.Name(), func() string {
-			if v.IsDir() {
-				return "/"
-			}
-			return ""
-		}())
-		fmt.Println()
+    sort.Slice(files, func(i, j int) bool {
+        return files[i].Name() < files[j].Name()
+    })
+
+	for i, v := range files {
+
+        isLast := i == len(files)
+
+        connector := "|--"
+        newPrefix := prefix + "|    "
+
+        if isLast {
+            connector = "└── "
+            newPrefix = prefix + "      "
+        }
+
+        fmt.Printf("%s%s%s\n", prefix, connector, v.Name())
+
 		if v.IsDir() {
 			newPath := filepath.Join(dir, v.Name())
-			fmt.Print("|  ")
-			ListFiles(newPath)
+			ListFiles(newPath, newPrefix)
 		}
 	}
 }

@@ -4,9 +4,6 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"log"
-	"os"
-
 	"github.com/aryanbroy/file_manager/utils"
 	"github.com/spf13/cobra"
 )
@@ -22,12 +19,14 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		dir, err := os.Getwd()
-		if err != nil {
-			log.Fatalln("Error getting current dir: ", err.Error())
-		}
+		// dir, err := os.Getwd()
+		// if err != nil {
+		// 	log.Fatalln("Error getting current dir: ", err.Error())
+		// }
 
-		utils.ListFiles(dir)
+		// fmt.Println(dir)
+		// utils.ListFiles(dir)
+		utils.ListFiles("/home/aryan/go/student-api", "")
 
 	},
 }
