@@ -28,7 +28,7 @@ to quickly create a Cobra application.`,
 
 		// fmt.Println(dir)
 		// utils.ListFiles(dir)
-		dir := "/home/aryan/go/student-api"
+		dir := "/home/aryan/go/dummy_folder"
 		slog.Info("Printing the list of files in the requested directory", slog.String("dirname", dir))
 		utils.ListFiles(dir, "")
 
