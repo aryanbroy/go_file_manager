@@ -6,7 +6,10 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"log/slog"
 	"path/filepath"
+	"sync"
+	"time"
 
 	"github.com/aryanbroy/file_manager/utils"
 	"github.com/spf13/cobra"
@@ -28,16 +31,31 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		slog.Info("Deleting file")
+		// numOfFiles := len(stringSliceVar)
+		startTime := time.Now()
+		
+		var wg sync.WaitGroup
+		errChan := make(chan error, 10)
+
 		for _, file := range stringSliceVar {
+			wg.Add(1)
 			dummyDir := "/home/aryan/go/dummy_folder"
 			filePath := filepath.Join(dummyDir, file)
 
-			err := utils.DeleteFile(filePath)
-			if err != nil {
-				log.Fatalln(err.Error())
-			}
-			fmt.Printf("Deleted %s successfully\n", file)
+			go utils.DeleteFile(filePath, &wg, errChan)
 		}
+
+		go func ()  {
+			wg.Wait()
+			close(errChan)
+		}()
+
+		for err := range errChan {
+			log.Fatalf("Error: %v", err.Error())
+		}
+
+		fmt.Println("Time elapsed: ", time.Since(startTime))
 	},
 }
 

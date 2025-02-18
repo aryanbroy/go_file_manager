@@ -3,13 +3,14 @@ package utils
 import (
 	"fmt"
 	"os"
+	"sync"
 )
 
-func DeleteFile(filePath string) error {
-	fmt.Println(filePath)
-	err := os.Remove(filePath)
+func DeleteFile(filePath string, wg *sync.WaitGroup, errChan chan<- error) {
+	defer wg.Done()
+	err := os.Remove(filePath)	
 	if err != nil {
-		return fmt.Errorf("error deleting file: %s", err.Error())
+		errChan <- err
 	}
-	return nil
+	fmt.Println("Deleted ", filePath, " successfully")	
 }
