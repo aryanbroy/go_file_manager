@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"fmt"
+	"log/slog"
 	"os"
 	"sync"
 )
@@ -11,6 +11,7 @@ func DeleteFile(filePath string, wg *sync.WaitGroup, errChan chan<- error) {
 	err := os.Remove(filePath)	
 	if err != nil {
 		errChan <- err
+		return
 	}
-	fmt.Println("Deleted ", filePath, " successfully")	
+	slog.Info("Deleted ", filePath, " successfully")	
 }

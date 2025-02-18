@@ -4,7 +4,6 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"log/slog"
 	"path/filepath"
@@ -32,11 +31,10 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		slog.Info("Deleting file")
-		// numOfFiles := len(stringSliceVar)
 		startTime := time.Now()
 		
 		var wg sync.WaitGroup
-		errChan := make(chan error, 10)
+		errChan := make(chan error, len(stringSliceVar))
 
 		for _, file := range stringSliceVar {
 			wg.Add(1)
@@ -51,11 +49,17 @@ to quickly create a Cobra application.`,
 			close(errChan)
 		}()
 
+		hasErr := false
 		for err := range errChan {
+			hasErr = true
 			log.Fatalf("Error: %v", err.Error())
 		}
 
-		fmt.Println("Time elapsed: ", time.Since(startTime))
+		if !hasErr {
+			slog.Info("All files deleted successfully")
+		}
+
+		slog.Info("Time elapsed","duration",time.Since(startTime))
 	},
 }
 
